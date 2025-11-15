@@ -1,4 +1,4 @@
-// khushisgh01/internshipproject/InternshipProject-cbc12df567540c298725777ce3956a030bf171e4/backend/controllers/journalController.js
+// khushisgh01/internshipproject/InternshipProject-8a5f69cd629fc2efec8342b72121374131129261/backend/controllers/journalController.js
 
 import JournalEntry from '../models/JournalEntry.js'; // 💡 NEW IMPORT - Model
 
@@ -27,7 +27,53 @@ const createJournalEntry = async (req, res) => {
     }
 };
 
+// 💡 NEW: Update Journal Entry
+const updateJournalEntry = async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    try {
+        const updatedEntry = await JournalEntry.findByIdAndUpdate(
+            id,
+            updateData,
+            { new: true, runValidators: true } // Return the updated document and run schema validation
+        );
+
+        if (!updatedEntry) {
+            return res.status(404).json({ message: "Journal entry not found" });
+        }
+
+        res.json(updatedEntry);
+    } catch (error) {
+        console.error("Error updating journal entry:", error);
+        res.status(500).json({ message: "Failed to update journal entry" });
+    }
+};
+
+// 💡 NEW: Delete Journal Entry
+const deleteJournalEntry = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deletedEntry = await JournalEntry.findByIdAndDelete(id);
+
+        if (!deletedEntry) {
+            return res.status(404).json({ message: "Journal entry not found" });
+        }
+
+        // Return a 204 No Content status for successful deletion
+        res.status(204).send();
+    } catch (error) {
+        console.error("Error deleting journal entry:", error);
+        res.status(500).json({ message: "Failed to delete journal entry" });
+    }
+};
+
+
 export default {
     getJournalEntries,
     createJournalEntry,
+    // 💡 Export new functions
+    updateJournalEntry,
+    deleteJournalEntry,
 };
