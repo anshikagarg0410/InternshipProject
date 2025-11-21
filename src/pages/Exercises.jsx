@@ -114,6 +114,31 @@ const Exercises = () => {
               ))}
             </div>
         )}
+        {/* Loading/Error/Exercise Grid */}
+        {loading ? (
+            <div className='text-center p-8 bg-white rounded-xl shadow-md'>
+                <p className='text-lg text-violet-600'>Loading exercises...</p>
+            </div>
+        ) : error ? (
+             <div className='text-center p-8 bg-red-100 border border-red-400 text-red-700 rounded-xl shadow-md'>
+                <p className='font-semibold'>Error loading data:</p>
+                <p>{error}</p>
+            </div>
+        ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredExercises.map((exercise) => (
+                <ExerciseCard 
+                  key={exercise._id}
+                  imageSrc={exercise.imageSrc}
+                  title={exercise.title}
+                  duration={exercise.duration}
+                  category={exercise.category}
+                  difficulty={exercise.difficulty}
+                  benefits={exercise.benefits}
+                />
+              ))}
+            </div>
+        )}
 
       </div>
     </div>

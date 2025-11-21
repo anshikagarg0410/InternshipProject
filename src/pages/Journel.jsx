@@ -1,6 +1,9 @@
 // khushisgh01/internshipproject/InternshipProject-8a5f69cd629fc2efec8342b72121374131129261/src/pages/Journel.jsx
 
 import React, { useState, useEffect, useCallback } from 'react'
+// khushisgh01/internshipproject/InternshipProject-8a5f69cd629fc2efec8342b72121374131129261/src/pages/Journel.jsx
+
+import React, { useState, useEffect, useCallback } from 'react'
 import Sidebar from '../components/ui/Sidebar'
 import BottomNavBar from '../components/ui/bottomNavbar'
 import { Outlet } from 'react-router-dom'

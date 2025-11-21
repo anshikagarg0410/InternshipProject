@@ -15,7 +15,11 @@ const PostCard = ({ initials, name, tag, time, text, hashtags, likes, comments, 
                     <p className='font-semibold text-gray-800'>{name}</p>
                     {/* Display dynamically calculated time if timestamp exists */}
                     <p className='text-xs text-gray-500'>{time ? displayTime : 'just now'}</p> 
+                    {/* Display dynamically calculated time if timestamp exists */}
+                    <p className='text-xs text-gray-500'>{time ? displayTime : 'just now'}</p> 
                 </div>
+                {/* Tag logic is simplified for now */}
+                {tag && <span className={`ml-auto px-2 py-0.5 text-xs font-medium rounded-full ${postTagColor}`}>{tag}</span>}
                 {/* Tag logic is simplified for now */}
                 {tag && <span className={`ml-auto px-2 py-0.5 text-xs font-medium rounded-full ${postTagColor}`}>{tag}</span>}
             </div>
@@ -29,9 +33,11 @@ const PostCard = ({ initials, name, tag, time, text, hashtags, likes, comments, 
             </div>
             <div className='flex items-center gap-4 ml-12 text-gray-500'>
                 <div className='flex items-center cursor-pointer hover:text-red-500'>
+                <div className='flex items-center cursor-pointer hover:text-red-500'>
                     <span className="mr-1 text-red-500">❤️</span>
                     <span>{likes}</span>
                 </div>
+                <div className='flex items-center cursor-pointer hover:text-gray-700'>
                 <div className='flex items-center cursor-pointer hover:text-gray-700'>
                     <span className="mr-1 text-gray-400">💬</span>
                     <span>{comments}</span>
@@ -204,6 +210,13 @@ const CommunityFeedPlaceholder = () => {
                 </div>
             )}
             
+            {error && (
+                <div className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 border border-red-300" role="alert">
+                    <ExclamationTriangleIcon className='w-5 h-5 mr-3'/>
+                    <span className="font-medium">{error}</span>
+                </div>
+            )}
+            
             <h3 className='text-lg font-semibold text-gray-700 mb-4'>Recent Posts</h3>
 
             {/* Tags for filtering */}
@@ -211,8 +224,38 @@ const CommunityFeedPlaceholder = () => {
                 {filterOptions.map(tag => (
                     <TagFilter key={tag} tag={tag} />
                 ))}
+                {filterOptions.map(tag => (
+                    <TagFilter key={tag} tag={tag} />
+                ))}
             </div>
 
+            {/* Post Feed */}
+            {loading ? (
+                <div className='text-center p-8 bg-white rounded-xl shadow-md'>
+                    <p className='text-lg text-violet-600'>Loading community feed...</p>
+                </div>
+            ) : filteredPosts.length > 0 ? (
+                <div className="bg-white rounded-lg shadow-md divide-y divide-gray-100">
+                    {filteredPosts.map((post) => (
+                        <PostCard 
+                            key={post.id}
+                            initials={post.author.slice(0, 1)}
+                            name={post.author}
+                            tag={post.tags[0] || 'General'}
+                            time={post.timestamp} // Use timestamp for calculation
+                            text={post.text}
+                            hashtags={post.tags}
+                            likes={post.likes}
+                            comments={post.comments}
+                            postTagColor={getTagColor(post.tags[0] || 'General')}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <div className='text-center p-4 border border-gray-200 rounded-lg'>
+                    <p className='text-gray-500'>No posts found. Be the first to share something!</p>
+                </div>
+            )}
             {/* Post Feed */}
             {loading ? (
                 <div className='text-center p-8 bg-white rounded-xl shadow-md'>

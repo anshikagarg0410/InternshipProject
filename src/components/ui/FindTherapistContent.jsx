@@ -9,12 +9,14 @@ const sessionTypes = ['All Types', 'In-Person', 'Video Call', 'Phone Call'];
 const insurances = ['All Insurance', 'Aetna', 'Blue Cross Blue Shield', 'Cigna', 'UnitedHealthcare'];
 
 // Simple Dropdown Component
+// Simple Dropdown Component
 const CustomDropdown = ({ label, options, selectedValue, onChange }) => (
     <div className="relative">
         <select
             className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-violet-500 focus:border-violet-500 appearance-none bg-white pr-8 text-gray-700"
             value={selectedValue}
             onChange={onChange}
+            aria-label={label}
             aria-label={label}
         >
             {options.map(option => (
@@ -29,6 +31,34 @@ const CustomDropdown = ({ label, options, selectedValue, onChange }) => (
     </div>
 );
 
+// New Component to Display a Single Therapist
+const TherapistCard = ({ therapist }) => (
+    <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100 flex flex-col sm:flex-row justify-between hover:shadow-xl transition-shadow">
+        <div className='flex-1'>
+            <h3 className="text-xl font-bold text-gray-800">{therapist.name}</h3>
+            <p className="text-violet-600 font-semibold mb-2">{therapist.specialty}</p>
+            <p className="text-sm text-gray-600 mb-3">{therapist.bio}</p>
+            
+            <div className="flex items-center text-sm text-gray-500">
+                <StarIcon className="w-4 h-4 text-amber-400 mr-1 fill-amber-400" />
+                <span>{therapist.rating} Rating</span>
+                <span className="mx-3 text-gray-300">|</span>
+                <span>{therapist.location}</span>
+            </div>
+        </div>
+        
+        <div className='mt-4 sm:mt-0 sm:ml-6 flex-shrink-0 flex flex-col justify-end items-start sm:items-end space-y-2'>
+            <div className='flex flex-wrap gap-2'>
+                {therapist.sessions.map(session => (
+                     <span key={session} className="text-xs font-medium bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">{session}</span>
+                ))}
+            </div>
+            <button className="px-6 py-2 bg-violet-600 text-white font-semibold rounded-lg hover:bg-violet-700 transition-colors">
+                View Profile
+            </button>
+        </div>
+    </div>
+);
 // New Component to Display a Single Therapist
 const TherapistCard = ({ therapist }) => (
     <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100 flex flex-col sm:flex-row justify-between hover:shadow-xl transition-shadow">
@@ -149,6 +179,7 @@ const FindTherapistContent = () => {
                     </div>
                     
                     {/* Specialty Dropdown */}
+                    {/* Specialty Dropdown */}
                     <CustomDropdown
                         label="Specialty"
                         options={specialties}
@@ -156,6 +187,7 @@ const FindTherapistContent = () => {
                         onChange={(e) => setSpecialty(e.target.value)}
                     />
 
+                    {/* Location Dropdown */}
                     {/* Location Dropdown */}
                     <CustomDropdown
                         label="Location"
@@ -165,6 +197,7 @@ const FindTherapistContent = () => {
                     />
                     
                     {/* Session Type Dropdown */}
+                    {/* Session Type Dropdown */}
                     <CustomDropdown
                         label="All Types"
                         options={sessionTypes}
@@ -172,7 +205,9 @@ const FindTherapistContent = () => {
                         onChange={(e) => setType(e.target.value)}
                     />
                 </div>
+                </div>
 
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                     {/* Insurance Dropdown */}
                     <CustomDropdown
@@ -183,7 +218,15 @@ const FindTherapistContent = () => {
                     />
                     
                     {/* Placeholder filter */}
+                    {/* Placeholder filter */}
                     <div className='h-full'></div>
+                    
+                    {/* Status/Count */}
+                    <div className='h-full flex items-center justify-center md:justify-end'>
+                         <p className='text-md font-semibold text-gray-500'>
+                            {loading ? 'Searching...' : `Found ${therapistList.length} therapists`}
+                        </p>
+                    </div>
                     
                     {/* Status/Count */}
                     <div className='h-full flex items-center justify-center md:justify-end'>
@@ -194,6 +237,31 @@ const FindTherapistContent = () => {
                 </div>
             </div>
 
+            {/* Therapist Listings (Replaces Placeholder Content) */}
+            <div className='p-6 bg-white rounded-2xl shadow-xl space-y-4'>
+                <h2 className='text-xl font-bold text-gray-800'>Search Results</h2>
+
+                {error && <p className='text-red-500 text-center'>{error}</p>}
+                
+                {loading && (
+                    <div className='text-center p-4 text-gray-500'>
+                        <p>Loading therapist matches...</p>
+                    </div>
+                )}
+                
+                {!loading && therapistList.length > 0 && (
+                    <div className='space-y-6'>
+                        {therapistList.map(therapist => (
+                            <TherapistCard key={therapist.id} therapist={therapist} />
+                        ))}
+                    </div>
+                )}
+
+                {!loading && !error && therapistList.length === 0 && (
+                    <div className='text-center p-4 border border-gray-200 rounded-lg'>
+                        <p className='text-gray-500'>No therapists found matching the selected filters. Try broadening your search criteria.</p>
+                    </div>
+                )}
             {/* Therapist Listings (Replaces Placeholder Content) */}
             <div className='p-6 bg-white rounded-2xl shadow-xl space-y-4'>
                 <h2 className='text-xl font-bold text-gray-800'>Search Results</h2>

@@ -17,7 +17,9 @@ const Sidebar = ({ initialActiveItem = 'Home' }) => {
 
   const NavSection = ({ title, items, isEmergency = false, isAdvanced = false }) => (
     <div className="mt-4">
+    <div className="mt-4">
       {title && <h3 className="text-xs font-semibold uppercase text-gray-400 mb-2 px-3">{title}</h3>}
+      <div className="space-y-0">
       <div className="space-y-0">
         {items.map(item => (
           <SidebarItem
@@ -58,6 +60,7 @@ const Sidebar = ({ initialActiveItem = 'Home' }) => {
 
   return (
     <div className="w-64 min-h-screen bg-white p-4 flex flex-col shadow-xl">
+    <div className="w-64 min-h-screen bg-white p-4 flex flex-col shadow-xl">
       
       {/* Top Section: Logo and Title */}
       <div className="flex items-center mt-4 mb-4">
@@ -88,6 +91,8 @@ const Sidebar = ({ initialActiveItem = 'Home' }) => {
         )}
       </div>
 
+      {/* Main Navigation */}
+      <NavSection title="MAIN" items={mainNavItems} />
       {/* Main Navigation */}
       <NavSection title="MAIN" items={mainNavItems} />
 
