@@ -1,0 +1,54 @@
+{
+  "posts": [
+    {
+      "id": 201,
+      "text": "To anyone struggling today: you are not alone. Your feelings are valid, and it's okay to not be okay. Sending virtual hugs 💙",
+      "tags": ["support", "community", "encouragement"],
+      "timestamp": 1720000000000,
+      "likes": 67,
+      "comments": 18,
+      "author": "Hope Seeker"
+    },
+    {
+      "id": 202,
+      "text": "Tried the 5-4-3-2-1 grounding technique during a panic attack today. It really works!",
+      "tags": ["grounding", "mindfulness", "techniques"],
+      "timestamp": 1720005000000,
+      "likes": 41,
+      "comments": 12,
+      "author": "Peaceful Mind"
+    },
+    {
+      "id": 203,
+      "text": "Finally hit my 7-day journal streak! Small wins matter. What's one positive thing you did for yourself today?",
+      "tags": ["gratitude", "progress", "journal"],
+      "timestamp": 1720010000000,
+      "likes": 88,
+      "comments": 25,
+      "author": "Streak Master"
+    }
+  ],
+  "groups": [
+    {
+      "id": 301,
+      "title": "Anxiety Support Circle",
+      "description": "A safe space to share experiences and coping strategies for anxiety",
+      "members": 1247,
+      "tag": "Anxiety"
+    },
+    {
+      "id": 302,
+      "title": "Depression Warriors",
+      "description": "Supporting each other through the ups and downs of depression",
+      "members": 892,
+      "tag": "Depression"
+    },
+    {
+      "id": 303,
+      "title": "Mindfulness Beginners",
+      "description": "Learning mindfulness practices together, one breath at a time",
+      "members": 350,
+      "tag": "Mindfulness"
+    }
+  ]
+}

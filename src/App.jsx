@@ -1,4 +1,7 @@
+// khushisgh01/internshipproject/InternshipProject-8a5f69cd629fc2efec8342b72121374131129261/src/App.jsx
+
 import Home from './pages/Home.jsx'
+import Auth from './pages/Auth.jsx' // 💡 NEW: Import Auth component
 import Journel from './pages/Journel.jsx'
 import Exercises from './pages/Exercises.jsx'
 import NewEntryPage from './components/ui/newentryPage.jsx'
@@ -19,18 +22,30 @@ import PreferencesContent from './components/ui/PreferencesContent.jsx'
 import AboutContent from './components/ui/AboutContent.jsx'
 import FindTherapist from './pages/FindTherapist.jsx'
 import FindTherapistContent from './components/ui/FindTherapistContent.jsx' 
-import TherapyTypesContent from './components/ui/TherapyTypesContent.jsx' // NEW IMPORT
-import InsuranceCostsContent from './components/ui/InsuranceCostsContent.jsx' // NEW IMPORT
+import TherapyTypesContent from './components/ui/TherapyTypesContent.jsx' 
+import InsuranceCostsContent from './components/ui/InsuranceCostsContent.jsx' 
+import AIChat from './pages/AIChat.jsx' 
+import ProtectedRoute from './components/ui/ProtectedRoute.jsx' 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext' // 💡 NEW: Import AuthProvider
 
 const router = createBrowserRouter([
+  // Public Auth Routes
+  { path: '/login', element: <Auth key="login"/> },
+  { path: '/signup', element: <Auth key="signup"/> },
+  
+  // WRAP PROTECTED ROUTES
   {
     path: '/',
-    element: <Home/>
+    element: <ProtectedRoute><Home/></ProtectedRoute>
+  },
+  {
+    path: '/ai-chat',
+    element: <ProtectedRoute><AIChat/></ProtectedRoute>
   },
   {
     path: '/journel',
-    element:<Journel/>,
+    element: <ProtectedRoute><Journel/></ProtectedRoute>,
     children: [
       {
         path:'new-entry',
@@ -44,12 +59,13 @@ const router = createBrowserRouter([
   },
   {
     path:'/exercises',
-    element:<Exercises/>
+    element:<ProtectedRoute><Exercises/></ProtectedRoute>
   },
   {
     path:'/soundscapes',
-    element:<Soundscapes/>
+    element:<ProtectedRoute><Soundscapes/></ProtectedRoute>
   },
+  // Crises Support remains PUBLIC
   {
     path:'/crises-support',
     element:<CrisesSupport/>,
@@ -72,10 +88,9 @@ const router = createBrowserRouter([
       }
     ]
   },
-  // --- ROUTE FOR COMMUNITY SUPPORT ---
   {
     path: '/community-support',
-    element: <CommunitySupport />,
+    element: <ProtectedRoute><CommunitySupport /></ProtectedRoute>,
     children: [
       {
         index: true,
@@ -95,10 +110,9 @@ const router = createBrowserRouter([
       },
     ]
   },
-  // --- ROUTE FOR PROFILE & SETTINGS ---
   {
     path: '/profile-settings',
-    element: <ProfileSettings />,
+    element: <ProtectedRoute><ProfileSettings /></ProtectedRoute>,
     children: [
       {
         index: true,
@@ -118,22 +132,19 @@ const router = createBrowserRouter([
       }
     ]
   },
-  // --- UPDATED ROUTE FOR FIND THERAPIST ---
   {
     path: '/find-therapist',
-    element: <FindTherapist />,
+    element: <ProtectedRoute><FindTherapist /></ProtectedRoute>,
     children: [
       {
         index: true,
         element: <FindTherapistContent /> 
       },
       {
-        // Now points to TherapyTypesContent
         path: 'types-of-therapy',
         element: <TherapyTypesContent />
       },
       {
-        // Now points to InsuranceCostsContent
         path: 'insurance-costs',
         element: <InsuranceCostsContent />
       }
@@ -144,7 +155,10 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      {/* 💡 FIX: AuthProvider must wrap RouterProvider to ensure useNavigate is in context */}
+      <AuthProvider> 
+        <RouterProvider router={router} />
+      </AuthProvider>
     </>
   )
 }

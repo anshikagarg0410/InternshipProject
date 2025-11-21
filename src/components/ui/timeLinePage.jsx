@@ -1,34 +1,43 @@
+// khushisgh01/internshipproject/InternshipProject-8a5f69cd629fc2efec8342b72121374131129261/src/components/ui/timeLinePage.jsx
+
 import React from 'react'
+import { useOutletContext } from 'react-router-dom'; // 💡 NEW: Import hook to get context
 import JournalEntry from './journelEntry' // Make sure path is correct
 
 const TimelinePage = () => {
-  // This is the content you cut from Journel.js
+  // 💡 NEW: Use the context passed from the parent (Journel.jsx)
+  const { entries, loading, error } = useOutletContext();
+  
   return (
     <>
       <div className='mt-6 bg-white p-6 rounded-2xl shadow-md'>
-          <h2 className=' font-normal mb-4'>Recent Entries</h2>
+          <h2 className='font-normal mb-4'>Recent Entries</h2>
           <div className='space-y-4'>
-              <JournalEntry 
-                emoji="😊"
-                  mood="Happy"
-                  date="2024-06-20"
-                  text="Had a great day at the park with friends. The weather was perfect and we enjoyed a lovely picnic."
-                  tags={['outdoors', 'friends', 'sunny']}
-              />
-              <JournalEntry 
-                emoji="😞"
-                  mood="Sad"
-                  date="2024-06-19"
-                  text="Felt a bit down today. Missed an important deadline at work which stressed me out."
-                  tags={['work', 'stress']}
-              />
-              <JournalEntry 
-                emoji="😐"
-                  mood="Neutral"
-                  date="2024-06-18"
-                  text="Just an average day. Nothing special happened, but nothing bad either."
-                  tags={['routine']}
-              />
+              
+              {loading && (
+                  <p className='text-center text-violet-600'>Loading entries...</p>
+              )}
+
+              {error && (
+                   <p className='text-center text-red-600'>Error: {error}</p>
+              )}
+
+              {!loading && entries.length === 0 && (
+                  <p className='text-center text-gray-500'>No entries yet. Start a new entry!</p>
+              )}
+
+              {/* 💡 Map over the fetched entries */}
+              {!loading && entries.map(entry => (
+                <JournalEntry 
+                  key={entry._id} // Use MongoDB's unique ID
+                  emoji={entry.emoji}
+                  mood={entry.mood}
+                  // Use the date from the entry, format it if needed, or use createdAt
+                  date={new Date(entry.createdAt).toLocaleDateString()} 
+                  text={entry.text}
+                  tags={entry.tags}
+                />
+              ))}
           </div>
       </div>
     </>

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 301,
+    "title": "Anxiety Support Circle",
+    "description": "A safe space to share experiences and coping strategies for anxiety",
+    "members": 1247,
+    "tag": "Anxiety"
+  },
+  {
+    "id": 302,
+    "title": "Depression Warriors",
+    "description": "Supporting each other through the ups and downs of depression",
+    "members": 892,
+    "tag": "Depression"
+  },
+  {
+    "id": 303,
+    "title": "Mindfulness Beginners",
+    "description": "Learning mindfulness practices together, one breath at a time",
+    "members": 350,
+    "tag": "Mindfulness"
+  }
+]

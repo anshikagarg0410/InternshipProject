@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1719888000000,
+    "emoji": "😊",
+    "mood": "Happy",
+    "date": "July 1, 2024",
+    "text": "Had a great day at the park with friends. The weather was perfect and we enjoyed a lovely picnic.",
+    "tags": [
+      "outdoors",
+      "friends",
+      "sunny"
+    ]
+  },
+  {
+    "id": 1719715200000,
+    "emoji": "😞",
+    "mood": "Sad",
+    "date": "June 30, 2024",
+    "text": "Felt a bit down today. Missed an important deadline at work which stressed me out.",
+    "tags": [
+      "work",
+      "stress"
+    ]
+  },
+  {
+    "id": 1719628800000,
+    "emoji": "😐",
+    "mood": "Neutral",
+    "date": "June 29, 2024",
+    "text": "Just an average day. Nothing special happened, but nothing bad either.",
+    "tags": [
+      "routine"
+    ]
+  }
+]

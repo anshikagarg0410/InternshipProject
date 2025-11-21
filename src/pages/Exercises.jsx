@@ -1,59 +1,8 @@
-import React, { useState } from 'react';
-import Sidebar from '../components/ui/Sidebar.jsx'; // Adjust path as necessary
-import ExerciseCard from '../components/ui/ExerciseCard.jsx'; // Adjust path as necessary
-
-// Mock Data for the Exercise Cards
-const exerciseData = [
-  {
-    imageSrc: '/images/breathing-exercise.jpg', 
-    title: 'Box Breathing',
-    duration: 5,
-    category: 'Breathing',
-    difficulty: 'Beginner',
-    benefits: 'A simple 4-4-4-4 breathing technique to reduce anxiety and increase focus.',
-  },
-  {
-    imageSrc: '/images/4-7-8.png',
-    title: '4-7-8 Breathing',
-    duration: 4,
-    category: 'Breathing',
-    difficulty: 'Beginner',
-    benefits: 'Exhale stress and inhale calm with this powerful sleep-inducing technique.',
-  },
-  {
-    imageSrc: '/images/Belly Breathing.png',
-    title: 'Belly Breathing',
-    duration: 6,
-    category: 'Breathing',
-    difficulty: 'Beginner',
-    benefits: 'Deep diaphragmatic breathing to activate your relaxation response.',
-  },
-  {
-    imageSrc: '/images/Walking Meditation.jpg',
-    title: 'Walking Meditation',
-    duration: 15,
-    category: 'Mindfulness',
-    difficulty: 'Beginner',
-    benefits: 'Mindful movement to connect body and mind.',
-  },
-  {
-    imageSrc: '/images/Mindful Eating.jpg',
-    title: 'Mindful Eating',
-    duration: 20,
-    category: 'Mindfulness',
-    difficulty: 'Beginner',
-    benefits: 'Transform a simple meal into a meditation practice.',
-  },
-  {
-    imageSrc: '/images/Loving-Kindness Meditation.jpg',
-    title: 'Loving-Kindness Meditation',
-    duration: 12,
-    category: 'Mindfulness',
-    difficulty: 'Intermediate',
-    benefits: 'Cultivate compassion for yourself and others through guided meditation.',
-  },
-];
-
+import React, { useState, useEffect, useCallback } from 'react';
+import Sidebar from '../components/ui/Sidebar.jsx'; 
+import ExerciseCard from '../components/ui/ExerciseCard.jsx'; 
+import { useAuth } from '../context/AuthContext.jsx'; // 1. IMPORT useAuth
+// We define the categories here, as they are part of the UI/filtering logic
 const categories = ['All', 'Breathing', 'Mindfulness', 'Gratitude', 'CBT', 'Movement'];
 
 const FilterButton = ({ category, selected, onClick }) => (
@@ -72,14 +21,45 @@ const FilterButton = ({ category, selected, onClick }) => (
 
 const Exercises = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [exerciseData, setExerciseData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { getAuthHeader } = useAuth();
 
+  // Function to fetch data from the backend API
+  const fetchExercises = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+        const response = await fetch('/api/exercises', {
+            headers: getAuthHeader() 
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setExerciseData(data);
+    } catch (e) {
+        console.error("Error fetching exercises:", e);
+        setError("Failed to load exercises. Check if the backend is running.");
+        setExerciseData([]);
+    } finally {
+        setLoading(false);
+    }
+  }, [getAuthHeader]);
+
+  useEffect(() => {
+    fetchExercises();
+  }, [fetchExercises]);
+
+
+  // Filtering logic moved here, applied to the fetched data
   const filteredExercises = exerciseData.filter(exercise => 
     selectedCategory === 'All' || exercise.category === selectedCategory
   );
 
   return (
     <div className='flex min-h-screen bg-gray-50'>
-      {/* The Sidebar (Keeping the Exercises link highlighted as per your image) */}
       <Sidebar initialActiveItem="Exercises" /> 
       
       {/* Main Content Area */}
@@ -109,20 +89,31 @@ const Exercises = () => {
           ))}
         </div>
 
-        {/* Exercise Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredExercises.map((exercise, index) => (
-            <ExerciseCard 
-              key={index}Breathing
-              imageSrc={exercise.imageSrc}
-              title={exercise.title}
-              duration={exercise.duration}
-              category={exercise.category}
-              difficulty={exercise.difficulty}
-              benefits={exercise.benefits}
-            />
-          ))}
-        </div>
+        {/* Loading/Error/Exercise Grid */}
+        {loading ? (
+            <div className='text-center p-8 bg-white rounded-xl shadow-md'>
+                <p className='text-lg text-violet-600'>Loading exercises...</p>
+            </div>
+        ) : error ? (
+             <div className='text-center p-8 bg-red-100 border border-red-400 text-red-700 rounded-xl shadow-md'>
+                <p className='font-semibold'>Error loading data:</p>
+                <p>{error}</p>
+            </div>
+        ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredExercises.map((exercise) => (
+                <ExerciseCard 
+                  key={exercise._id}
+                  imageSrc={exercise.imageSrc}
+                  title={exercise.title}
+                  duration={exercise.duration}
+                  category={exercise.category}
+                  difficulty={exercise.difficulty}
+                  benefits={exercise.benefits}
+                />
+              ))}
+            </div>
+        )}
 
       </div>
     </div>

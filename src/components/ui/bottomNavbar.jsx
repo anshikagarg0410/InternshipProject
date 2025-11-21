@@ -38,16 +38,6 @@ const BottomNavBar = () => {
           Timeline
         </NavLink>
 
-        {/* Insights Link */}
-        <NavLink 
-          to="/journel1" // <-- Changed from /journel
-          className={({ isActive }) => 
-            `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`
-          }
-        >
-          <ChartBarIcon className="h-5 w-5 mr-2" />
-          Insights
-        </NavLink>
 
         {/* New Entry Link */}
         <NavLink 

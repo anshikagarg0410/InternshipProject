@@ -1,0 +1,42 @@
+[
+  {
+    "id": 101,
+    "name": "Dr. Elena Rodriguez",
+    "specialty": "Cognitive Behavioral Therapy (CBT)",
+    "location": "San Francisco, CA",
+    "insurance": ["Aetna", "Cigna"],
+    "rating": 4.8,
+    "sessions": ["Video Call", "In-Person"],
+    "bio": "Specializes in anxiety, depression, and trauma using evidence-based CBT techniques."
+  },
+  {
+    "id": 102,
+    "name": "Marcus Chen, LCSW",
+    "specialty": "Dialectical Behavior Therapy (DBT)",
+    "location": "Los Angeles, CA",
+    "insurance": ["Blue Cross Blue Shield"],
+    "rating": 4.5,
+    "sessions": ["Video Call"],
+    "bio": "Focuses on emotional regulation, distress tolerance, and interpersonal effectiveness."
+  },
+  {
+    "id": 103,
+    "name": "Sarah Miller, LMFT",
+    "specialty": "Couples & Family Counseling",
+    "location": "Austin, TX",
+    "insurance": ["UnitedHealthcare", "Cigna"],
+    "rating": 4.9,
+    "sessions": ["In-Person"],
+    "bio": "Licensed Marriage and Family Therapist helping couples and families improve communication."
+  },
+  {
+    "id": 104,
+    "name": "Anya Sharma, PhD",
+    "specialty": "Acceptance and Commitment Therapy (ACT)",
+    "location": "New York, NY",
+    "insurance": ["Aetna", "UnitedHealthcare"],
+    "rating": 4.7,
+    "sessions": ["Video Call"],
+    "bio": "Helps clients clarify their values and commit to behaviors aligned with those values."
+  }
+]

@@ -1,5 +1,6 @@
-import React from 'react';
-import { MagnifyingGlassIcon, FunnelIcon, PhoneIcon } from '@heroicons/react/24/outline';
+import React, { useState, useEffect, useCallback } from 'react';
+import { MagnifyingGlassIcon, FunnelIcon, PhoneIcon, StarIcon } from '@heroicons/react/24/outline';
+import { useAuth } from '../../context/AuthContext'; // 1. IMPORT useAuth
 
 // Mock data for dropdowns based on images
 const specialties = ['All Specialties', 'Anxiety', 'Depression', 'CBT', 'Trauma', 'Couples Therapy', 'Teen Therapy', 'ADHD'];
@@ -7,13 +8,14 @@ const locations = ['All Locations', 'San Francisco, CA', 'Los Angeles, CA', 'Aus
 const sessionTypes = ['All Types', 'In-Person', 'Video Call', 'Phone Call'];
 const insurances = ['All Insurance', 'Aetna', 'Blue Cross Blue Shield', 'Cigna', 'UnitedHealthcare'];
 
-// Simple Dropdown Component (Placeholder for functionality)
+// Simple Dropdown Component
 const CustomDropdown = ({ label, options, selectedValue, onChange }) => (
     <div className="relative">
         <select
             className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-violet-500 focus:border-violet-500 appearance-none bg-white pr-8 text-gray-700"
             value={selectedValue}
             onChange={onChange}
+            aria-label={label}
         >
             {options.map(option => (
                 <option key={option} value={option}>{option}</option>
@@ -27,13 +29,86 @@ const CustomDropdown = ({ label, options, selectedValue, onChange }) => (
     </div>
 );
 
+// New Component to Display a Single Therapist
+const TherapistCard = ({ therapist }) => (
+    <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100 flex flex-col sm:flex-row justify-between hover:shadow-xl transition-shadow">
+        <div className='flex-1'>
+            <h3 className="text-xl font-bold text-gray-800">{therapist.name}</h3>
+            <p className="text-violet-600 font-semibold mb-2">{therapist.specialty}</p>
+            <p className="text-sm text-gray-600 mb-3">{therapist.bio}</p>
+            
+            <div className="flex items-center text-sm text-gray-500">
+                <StarIcon className="w-4 h-4 text-amber-400 mr-1 fill-amber-400" />
+                <span>{therapist.rating} Rating</span>
+                <span className="mx-3 text-gray-300">|</span>
+                <span>{therapist.location}</span>
+            </div>
+        </div>
+        
+        <div className='mt-4 sm:mt-0 sm:ml-6 flex-shrink-0 flex flex-col justify-end items-start sm:items-end space-y-2'>
+            <div className='flex flex-wrap gap-2'>
+                {therapist.sessions.map(session => (
+                     <span key={session} className="text-xs font-medium bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">{session}</span>
+                ))}
+            </div>
+            <button className="px-6 py-2 bg-violet-600 text-white font-semibold rounded-lg hover:bg-violet-700 transition-colors">
+                View Profile
+            </button>
+        </div>
+    </div>
+);
 
 const FindTherapistContent = () => {
-    // State to simulate filters
-    const [specialty, setSpecialty] = React.useState(specialties[2]); // Default to 'Depression'
-    const [location, setLocation] = React.useState(locations[3]); // Default to 'Austin, TX'
-    const [type, setType] = React.useState(sessionTypes[0]);
-    const [insurance, setInsurance] = React.useState(insurances[0]);
+    // State for Filters
+    const [specialty, setSpecialty] = useState(specialties[0]); 
+    const [location, setLocation] = useState(locations[0]);
+    const [type, setType] = useState(sessionTypes[0]);
+    const [insurance, setInsurance] = useState(insurances[0]);
+
+    // State for API Data
+    const [therapistList, setTherapistList] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const { getAuthHeader } = useAuth();
+
+    // Function to fetch data from the backend API
+    const fetchTherapists = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        // Build query string based on selected filters (matching backend logic)
+        const params = new URLSearchParams();
+        if (specialty !== specialties[0]) params.append('specialty', specialty);
+        if (location !== locations[0]) params.append('location', location);
+        
+        // Note: The mock backend only filters by specialty and location, 
+        // but we'll include a placeholder for insurance/type logic if needed later.
+        
+        const queryString = params.toString();
+        const apiUrl = `/api/therapists${queryString ? '?' + queryString : ''}`;
+
+        try {
+            const response = await fetch(apiUrl, {
+                headers: getAuthHeader()
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setTherapistList(data);
+        } catch (e) {
+            console.error("Error fetching therapists:", e);
+            setError("Failed to load therapist listings. Check if the backend is running.");
+            setTherapistList([]);
+        } finally {
+            setLoading(false);
+        }
+    }, [specialty, location, getAuthHeader]); // Dependencies: Refetch when these filters change
+
+    // useEffect to trigger the fetch function when filters change
+    useEffect(() => {
+        fetchTherapists();
+    }, [fetchTherapists]);
 
     return (
         <div className='space-y-8'>
@@ -73,7 +148,7 @@ const FindTherapistContent = () => {
                         />
                     </div>
                     
-                    {/* Specialty Dropdown (e.g., Depression) */}
+                    {/* Specialty Dropdown */}
                     <CustomDropdown
                         label="Specialty"
                         options={specialties}
@@ -81,7 +156,7 @@ const FindTherapistContent = () => {
                         onChange={(e) => setSpecialty(e.target.value)}
                     />
 
-                    {/* Location Dropdown (e.g., Austin, TX) */}
+                    {/* Location Dropdown */}
                     <CustomDropdown
                         label="Location"
                         options={locations}
@@ -89,19 +164,16 @@ const FindTherapistContent = () => {
                         onChange={(e) => setLocation(e.target.value)}
                     />
                     
-                    {/* Placeholder filter */}
-                    <div className='h-full'></div> 
-                </div>
-
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                    {/* Type Dropdown (In-person, Video Call) */}
+                    {/* Session Type Dropdown */}
                     <CustomDropdown
                         label="All Types"
                         options={sessionTypes}
                         selectedValue={type}
                         onChange={(e) => setType(e.target.value)}
                     />
+                </div>
 
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                     {/* Insurance Dropdown */}
                     <CustomDropdown
                         label="All Insurance"
@@ -110,22 +182,43 @@ const FindTherapistContent = () => {
                         onChange={(e) => setInsurance(e.target.value)}
                     />
                     
-                    {/* Blank filter placeholder */}
+                    {/* Placeholder filter */}
                     <div className='h-full'></div>
-                </div>
-
-                <div className='mt-6 text-center'>
-                    <p className='text-md font-semibold text-gray-500'>Found 0 therapists matching your criteria</p>
-                    <button className="mt-4 px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
-                        Manage cookies or opt out
-                    </button>
+                    
+                    {/* Status/Count */}
+                    <div className='h-full flex items-center justify-center md:justify-end'>
+                         <p className='text-md font-semibold text-gray-500'>
+                            {loading ? 'Searching...' : `Found ${therapistList.length} therapists`}
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            {/* Placeholder Content for other tabs (Outlet will handle this in App.jsx) */}
-            <div className='p-6 bg-white rounded-2xl shadow-xl'>
-                 <h2 className='text-xl font-semibold'>Therapist Listings will appear here</h2>
-                 <p className='text-gray-500 mt-2'>Filter and search to find a provider.</p>
+            {/* Therapist Listings (Replaces Placeholder Content) */}
+            <div className='p-6 bg-white rounded-2xl shadow-xl space-y-4'>
+                <h2 className='text-xl font-bold text-gray-800'>Search Results</h2>
+
+                {error && <p className='text-red-500 text-center'>{error}</p>}
+                
+                {loading && (
+                    <div className='text-center p-4 text-gray-500'>
+                        <p>Loading therapist matches...</p>
+                    </div>
+                )}
+                
+                {!loading && therapistList.length > 0 && (
+                    <div className='space-y-6'>
+                        {therapistList.map(therapist => (
+                            <TherapistCard key={therapist.id} therapist={therapist} />
+                        ))}
+                    </div>
+                )}
+
+                {!loading && !error && therapistList.length === 0 && (
+                    <div className='text-center p-4 border border-gray-200 rounded-lg'>
+                        <p className='text-gray-500'>No therapists found matching the selected filters. Try broadening your search criteria.</p>
+                    </div>
+                )}
             </div>
             
         </div>

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "imageSrc": "/images/breathing-exercise.jpg",
+    "title": "Box Breathing",
+    "duration": 5,
+    "category": "Breathing",
+    "difficulty": "Beginner",
+    "benefits": "A simple 4-4-4-4 breathing technique to reduce anxiety and increase focus."
+  },
+  {
+    "id": 2,
+    "imageSrc": "/images/4-7-8.png",
+    "title": "4-7-8 Breathing",
+    "duration": 4,
+    "category": "Breathing",
+    "difficulty": "Beginner",
+    "benefits": "Exhale stress and inhale calm with this powerful sleep-inducing technique."
+  },
+  {
+    "id": 3,
+    "imageSrc": "/images/Loving-Kindness Meditation.jpg",
+    "title": "Loving-Kindness Meditation",
+    "duration": 12,
+    "category": "Mindfulness",
+    "difficulty": "Intermediate",
+    "benefits": "Cultivate compassion for yourself and others through guided meditation."
+  },
+  {
+    "id": 4,
+    "imageSrc": "/images/Mindful Eating.jpg",
+    "title": "Mindful Eating",
+    "duration": 20,
+    "category": "Mindfulness",
+    "difficulty": "Beginner",
+    "benefits": "Transform a simple meal into a meditation practice."
+  }
+]

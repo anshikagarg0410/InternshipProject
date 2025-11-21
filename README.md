@@ -1,16 +1,64 @@
-# React + Vite
+## 💜 MindfulSpace: Your Personal Mental Wellness Companion
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MindfulSpace is a comprehensive, full-stack application built to support emotional well-being through AI, structured journaling, and resource management.
 
-Currently, two official plugins are available:
+-----
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### ✨ Core Features
 
-## React Compiler
+  * **AI Support Chat (MindfulBot):** Empathetic, Gemini-powered assistant offering immediate support and mindfulness techniques.
+  * **Mood Journal:** Track emotional journeys with tagging and full CRUD operations.
+  * **Wellness Exercises:** Guided library including **Breathing** (`4-7-8`, `Box Breathing`) and **Mindfulness** exercises.
+  * **Ambient Soundscapes:** Audio controls, timer, and presets for focus or sleep (e.g., `Gentle Rain`).
+  * **Crisis & Safety:** Instant access to crisis lines (`988`) and a personalized, downloadable **Safety Plan** creator.
+  * **Find a Therapist:** Filterable search for verified professionals and educational content (CBT, DBT).
+  * **Community:** Anonymous, moderated peer support feed and groups.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-----
 
-## Expanding the ESLint configuration
+### 🏗️ Architecture & Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Component | Technology | Details |
+| :--- | :--- | :--- |
+| **Backend** | Node.js / Express.js | REST API, Protected Routes (JWT). |
+| **Frontend** | React (Vite) / Tailwind CSS | Fast development environment with a modern utility-first CSS framework. |
+| **Database** | MongoDB / Mongoose | Scalable, document-based data persistence. |
+| **Dev Flow** | `concurrently` & `Vite Proxy` | Simultaneous running of frontend and backend servers; API calls proxied to Node. |
+
+### 📂 Project Structure
+
+```
+.
+├── backend/
+│   ├── controllers/      # API Logic (Journal, Chat, Auth)
+│   ├── models/           # Mongoose Schemas (User, JournalEntry)
+│   └── middleware/       # JWT Authentication Layer
+├── src/
+│   ├── components/
+│   │   └── ui/           # Shared UI Components (Sidebar, Cards)
+│   ├── context/          # AuthContext for JWT management
+│   └── pages/            # Main Views (Home, AIChat, Journel)
+└── .env                  # Configuration
+```
+
+-----
+
+### 🚀 Quick Run Instructions
+
+1.  **Prerequisites:** Node.js (v18+), MongoDB, and a Gemini API Key.
+2.  **Install:**
+    ```bash
+    npm install
+    ```
+3.  **Configure:** Create a `.env` file and populate it:
+    ```dotenv
+    MONGO_URI="..."
+    JWT_SECRET="..."
+    GEMINI_API_KEY="..."
+    ```
+4.  **Start:** Run both the Express backend and the React frontend simultaneously:
+    ```bash
+    npm run dev
+    # Frontend available at: http://localhost:5173
+    # Backend API at: http://localhost:3001/api
+    ```

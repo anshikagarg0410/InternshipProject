@@ -5,6 +5,7 @@ import HeroSection from '../components/ui/heroSection';
 import TherapistNavbar from '../components/ui/TherapistNavbar'; // NEW IMPORT
 import FindTherapistContent from '../components/ui/FindTherapistContent'; // Default content
 
+
 const FindTherapist = () => {
     return (
         <div className='flex min-h-screen bg-gray-50'>
